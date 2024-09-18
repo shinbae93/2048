@@ -1,26 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react'
+import { Block } from './components/Block'
 
 function App() {
+  const [data, setData] = useState([
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+  ])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="m-auto w-max p-2 mt-3 rounded-md bg-[#AD9D8F]">
+      {data.map((row, rowIndex) => {
+        return (
+          <div className="flex" key={rowIndex}>
+            {row.map((num, index) => (
+              <Block num={num} key={index}></Block>
+            ))}
+          </div>
+        )
+      })}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
