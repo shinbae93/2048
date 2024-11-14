@@ -42,8 +42,10 @@ function App() {
         return
     }
 
-    addNewNumber(newBoard)
-    setData(newBoard)
+    if (newBoard.toString() !== data.toString()) {
+      addNewNumber(newBoard)
+      setData(newBoard)
+    }
   }
 
   function initialize() {
