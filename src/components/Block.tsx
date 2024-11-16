@@ -7,8 +7,9 @@ interface Props {
 export const Block = ({ num }: Props) => {
   return (
     <div
-      className="w-20 h-20 bg-[lightgray] m-1 flex justify-center items-center text-5xl font-bold text-white"
-      style={getBlockStyle(num)}>
+      className={`flex items-center justify-center h-20 w-20 rounded-md text-3xl font-bold ${getBlockStyle(
+        num
+      )}`}>
       {num}
     </div>
   )

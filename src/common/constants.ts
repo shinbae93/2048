@@ -1,16 +1,16 @@
 export const tileStyles: {
-  [key: number]: { backgroundColor: string; color: string }
+  [key: number]: string
 } = {
-  0: { backgroundColor: '#cdc1b4', color: '#776e65' },
-  2: { backgroundColor: '#eee4da', color: '#776e65' },
-  4: { backgroundColor: '#ede0c8', color: '#776e65' },
-  8: { backgroundColor: '#f2b179', color: '#f9f6f2' },
-  16: { backgroundColor: '#f59563', color: '#f9f6f2' },
-  32: { backgroundColor: '#f67c5f', color: '#f9f6f2' },
-  64: { backgroundColor: '#f65e3b', color: '#f9f6f2' },
-  128: { backgroundColor: '#edcf72', color: '#f9f6f2' },
-  256: { backgroundColor: '#edcc61', color: '#f9f6f2' },
-  512: { backgroundColor: '#edc850', color: '#f9f6f2' },
-  1024: { backgroundColor: '#edc53f', color: '#f9f6f2' },
-  2048: { backgroundColor: '#edc22e', color: '#f9f6f2' },
+  0: 'bg-gray-200 text-gray-700',
+  2: 'bg-gray-100 text-gray-800',
+  4: 'bg-gray-300 text-gray-800',
+  8: 'bg-yellow-400 text-white',
+  16: 'bg-orange-400 text-white',
+  32: 'bg-orange-500 text-white',
+  64: 'bg-orange-600 text-white',
+  128: 'bg-yellow-300 text-white',
+  256: 'bg-yellow-500 text-white',
+  512: 'bg-yellow-600 text-white',
+  1024: 'bg-yellow-700 text-white',
+  2048: 'bg-green-500 text-white',
 } as const

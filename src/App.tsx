@@ -2,12 +2,9 @@ import { useEffect, useState } from 'react'
 import { Block } from './components/Block'
 
 function App() {
-  const [data, setData] = useState([
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-  ])
+  const [data, setData] = useState(createEmptyBoard())
+  const [gameOver, setGameOver] = useState(false)
+  const [gameWon, setGameWon] = useState(false)
 
   useEffect(() => {
     initialize()
@@ -45,21 +42,24 @@ function App() {
     if (newBoard.toString() !== data.toString()) {
       addNewNumber(newBoard)
       setData(newBoard)
+
+      if (checkWin(newBoard)) {
+        setGameWon(true)
+      } else if (isGameOver(newBoard)) {
+        setGameOver(true)
+      }
     }
   }
 
   function initialize() {
-    let board = [
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-    ]
+    let board = createEmptyBoard()
 
     addNewNumber(board)
     addNewNumber(board)
 
     setData(board)
+    setGameOver(false)
+    setGameWon(false)
   }
 
   function addNewNumber(board: number[][]) {
@@ -141,17 +141,74 @@ function App() {
     }
   }
 
+  function createEmptyBoard() {
+    return [
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+    ]
+  }
+
+  const isGameOver = (board: number[][]) => {
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 4; col++) {
+        if (
+          board[row][col] === 0 ||
+          (col < 3 && board[row][col] === board[row][col + 1]) ||
+          (row < 3 && board[row][col] === board[row + 1][col])
+        ) {
+          return false
+        }
+      }
+    }
+
+    return true
+  }
+
+  const checkWin = (board: number[][]) => {
+    for (let row of board) {
+      if (row.includes(2048)) return true
+    }
+    return false
+  }
+
   return (
-    <div className="m-auto w-max p-2 mt-3 rounded-md bg-[#AD9D8F]">
-      {data.map((row, rowIndex) => {
-        return (
-          <div className="flex" key={rowIndex}>
-            {row.map((num, index) => (
-              <Block num={num} key={index}></Block>
-            ))}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200">
+      <h1 className="text-4xl font-bold mb-6">2048 Game</h1>
+      <div className="relative bg-gray-300 p-4 rounded-lg shadow-lg">
+        {gameOver && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-300 bg-opacity-80 rounded-lg z-10">
+            <h2 className="text-3xl font-bold text-gray-700 mb-4">
+              Game Over!
+            </h2>
+            <button
+              onClick={initialize}
+              className="px-4 py-2 bg-red-500 text-white text-lg font-semibold rounded-lg hover:bg-red-600">
+              Restart
+            </button>
           </div>
-        )
-      })}
+        )}
+        {gameWon && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-300 bg-opacity-80 rounded-lg z-10">
+            <h2 className="text-3xl font-bold text-gray-700 mb-4">You Win!</h2>
+            <button
+              onClick={initialize}
+              className="px-4 py-2 bg-green-500 text-white text-lg font-semibold rounded-lg hover:bg-green-600">
+              Restart
+            </button>
+          </div>
+        )}
+        <div className="grid gap-2 bg-gray-400 p-4 rounded-lg">
+          {data.map((row, rowIndex) => (
+            <div key={rowIndex} className="grid grid-cols-4 gap-3">
+              {row.map((value, colIndex) => (
+                <Block key={colIndex} num={value} />
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
