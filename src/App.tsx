@@ -5,6 +5,7 @@ function App() {
   const [data, setData] = useState(createEmptyBoard())
   const [gameOver, setGameOver] = useState(false)
   const [gameWon, setGameWon] = useState(false)
+  const [score, setScore] = useState(0)
 
   useEffect(() => {
     initialize()
@@ -58,6 +59,7 @@ function App() {
     addNewNumber(board)
 
     setData(board)
+    setScore(0)
     setGameOver(false)
     setGameWon(false)
   }
@@ -83,11 +85,13 @@ function App() {
 
   function slideRowLeft(row: number[]) {
     let filteredRow = row.filter((num) => num !== 0)
+    let points = 0
 
     for (let i = 0; i < filteredRow.length - 1; i++) {
       if (filteredRow[i] === filteredRow[i + 1]) {
         filteredRow[i] *= 2
         filteredRow[i + 1] = 0
+        points += filteredRow[i]
       }
     }
 
@@ -97,34 +101,61 @@ function App() {
       filteredRow.push(0)
     }
 
-    return filteredRow
+    return { newRow: filteredRow, points }
   }
 
   function slideLeft(board: number[][]) {
+    let pointsGained = 0
+
     for (let row = 0; row < 4; row++) {
-      board[row] = slideRowLeft(board[row])
+      const { newRow, points } = slideRowLeft(board[row])
+      board[row] = newRow
+      pointsGained += points
     }
+
+    setScore(score + pointsGained)
+
+    return board
   }
 
   function slideRight(board: number[][]) {
+    let pointsGained = 0
+
     for (let row = 0; row < 4; row++) {
-      board[row] = slideRowLeft(board[row].reverse()).reverse()
+      const { newRow, points } = slideRowLeft(board[row].reverse())
+      board[row] = newRow.reverse()
+      pointsGained += points
     }
+
+    setScore(score + pointsGained)
+
+    return board
   }
 
   function slideUp(board: number[][]) {
+    let pointsGained = 0
+
     for (let col = 0; col < 4; col++) {
       let column = [board[0][col], board[1][col], board[2][col], board[3][col]]
 
-      column = slideRowLeft(column)
+      const { newRow, points } = slideRowLeft(column)
+
+      column = newRow
+      pointsGained += points
 
       for (let row = 0; row < 4; row++) {
         board[row][col] = column[row]
       }
     }
+
+    setScore(score + pointsGained)
+
+    return board
   }
 
   function slideDown(board: number[][]) {
+    let pointsGained = 0
+
     for (let col = 0; col < 4; col++) {
       let column = [
         board[0][col],
@@ -133,12 +164,19 @@ function App() {
         board[3][col],
       ].reverse()
 
-      column = slideRowLeft(column).reverse()
+      const { newRow, points } = slideRowLeft(column)
+
+      column = newRow.reverse()
+      pointsGained += points
 
       for (let row = 0; row < 4; row++) {
         board[row][col] = column[row]
       }
     }
+
+    setScore(score + pointsGained)
+
+    return board
   }
 
   function createEmptyBoard() {
@@ -176,6 +214,14 @@ function App() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200">
       <h1 className="text-4xl font-bold mb-6">2048 Game</h1>
+      <div className="flex justify-between w-full max-w-sm mb-4">
+        <button
+          onClick={initialize}
+          className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600">
+          New Game
+        </button>
+        <div className="text-xl font-bold">Score: {score}</div>
+      </div>
       <div className="relative bg-gray-300 p-4 rounded-lg shadow-lg">
         {gameOver && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-300 bg-opacity-80 rounded-lg z-10">
